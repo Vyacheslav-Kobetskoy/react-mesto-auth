@@ -1,0 +1,7 @@
+.gallery__caption {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 20px 31px 21px;
+}

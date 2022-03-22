@@ -1,0 +1,13 @@
+.gallery__delete-btn{
+  width: 18px;
+  height: 19px;
+  background-image: url(../../../images/DeleteCardButton.svg);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: 0;
+  position: absolute;
+  top:20px;
+  right: 20px;
+}
+
+

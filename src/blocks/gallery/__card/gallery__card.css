@@ -1,0 +1,8 @@
+.gallery__card {
+  border-radius: 10px;
+  background-color: #fff;
+  color: black;
+  width: 282px;
+  min-height: 361px;
+  position: relative;
+}

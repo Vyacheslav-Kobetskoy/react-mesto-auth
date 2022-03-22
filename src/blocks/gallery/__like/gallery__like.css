@@ -1,0 +1,12 @@
+.gallery__like {
+  width: 22px;
+  height: 19px;
+  background-image: url(../../../images/like.svg);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: 0;
+}
+
+.gallery__like:hover {
+  opacity: 0.6;
+}

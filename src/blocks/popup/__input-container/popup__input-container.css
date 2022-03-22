@@ -1,0 +1,14 @@
+.popup__input-container {
+  position: relative;
+  width: 100%;
+}
+
+.popup__input-container:nth-of-type(2) {
+  margin: 35px 0 0;
+}
+
+@media (max-width: 767px) {
+  .popup__input-container:nth-of-type(2) {
+    margin-top: 50px;
+  }
+}
