@@ -10,6 +10,8 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import Login from "./Login";
+import Register from "./Register";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -20,7 +22,8 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
-
+  const [isLogin, setIsLogin] = React.useState(true);
+  const [headerAuthMessage,setHeaderAuthMessage]=React.useState("Войти")
   React.useEffect(() => {
     api
       .getProfile()
@@ -131,7 +134,9 @@ function App() {
   return (
     <CurrentUserContext.Provider value={{ currentUser }}>
       <div className="page">
-        <Header />
+        <Header headerAuthMessage={headerAuthMessage}/>
+        <Login />
+        <Register />
         <Main
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
@@ -141,6 +146,7 @@ function App() {
           onCardDelete={handleCardDelete}
           cards={cards}
         />
+
         <Footer />
       </div>
 
