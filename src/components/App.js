@@ -6,7 +6,7 @@ import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
 import ImagePopup from "./ImagePopup.js";
-import api from "../utils/Api.js";
+import { api, apiAuth } from "../utils/Api.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -24,7 +24,7 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
-  const [isLogin, setIsLogin] = React.useState(true);
+  const [isLogin, setIsLogin] = React.useState();
 
   React.useEffect(() => {
     api
@@ -132,6 +132,11 @@ function App() {
       });
     closeAllPopups();
   }
+  React.useEffect(() => {
+    apiAuth
+      .checkJWT(localStorage.getItem("jwt"))
+      .then((data) => console.log(data));
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={{ currentUser }}>
@@ -141,11 +146,12 @@ function App() {
           <Route path="/sign-up">
             <Register />
           </Route>
-          <Route  path="/sign-in">
+          <Route path="/sign-in">
             <Login />
           </Route>
           <ProtectedRoute
-            exact path="/"
+            exact
+            path="/"
             loggedIn={isLogin}
             component={Main}
             onEditProfile={handleEditProfileClick}
@@ -155,14 +161,12 @@ function App() {
             onCardLike={handleCardLike}
             onCardDelete={handleCardDelete}
             cards={cards}
-          >
-
-            <Footer />
-          </ProtectedRoute>
+          ></ProtectedRoute>
           <Route>
             {isLogin ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
           </Route>
         </Switch>
+        <Footer />
       </div>
 
       <EditProfilePopup
