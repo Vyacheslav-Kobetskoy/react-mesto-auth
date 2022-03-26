@@ -1,5 +1,5 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Register(props) {
   return (
@@ -28,9 +28,9 @@ function Register(props) {
           className="btn-hover auth__save-btn"
         />
       </form>
-      <div to="login" className="auth__login-link">
+      <Link to="/sign-in" className="auth__login-link">
         Уже зарегистрированы? Войти
-      </div>
+      </Link>
     </div>
   );
 }

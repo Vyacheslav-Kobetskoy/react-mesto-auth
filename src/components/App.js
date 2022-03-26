@@ -1,4 +1,5 @@
 import React from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import "../index.css";
 import Header from "./Header.js";
@@ -12,6 +13,7 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
 import Register from "./Register";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -23,7 +25,7 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
   const [isLogin, setIsLogin] = React.useState(true);
-  const [headerAuthMessage,setHeaderAuthMessage]=React.useState("Войти")
+
   React.useEffect(() => {
     api
       .getProfile()
@@ -134,20 +136,33 @@ function App() {
   return (
     <CurrentUserContext.Provider value={{ currentUser }}>
       <div className="page">
-        <Header headerAuthMessage={headerAuthMessage}/>
-        <Login />
-        <Register />
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onImage={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-          cards={cards}
-        />
+        <Header />
+        <Switch>
+          <Route path="/sign-up">
+            <Register />
+          </Route>
+          <Route  path="/sign-in">
+            <Login />
+          </Route>
+          <ProtectedRoute
+            exact path="/"
+            loggedIn={isLogin}
+            component={Main}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onImage={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            cards={cards}
+          >
 
-        <Footer />
+            <Footer />
+          </ProtectedRoute>
+          <Route>
+            {isLogin ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+          </Route>
+        </Switch>
       </div>
 
       <EditProfilePopup
