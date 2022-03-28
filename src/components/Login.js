@@ -1,9 +1,9 @@
 import React from "react";
-import { apiAuth } from "../utils/Api.js";
 
 function Login(props) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
   function handleChangeEmail(event) {
     setEmail(event.target.value);
   }
@@ -13,11 +13,9 @@ function Login(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    apiAuth.loginUser(password, email).then((data) => {
-      localStorage.setItem('jwt',data.token)
-    });
-
+    props.handleLogin(password, email);
   }
+
   return (
     <div className="auth">
       <h2 className="auth__title">Вход</h2>

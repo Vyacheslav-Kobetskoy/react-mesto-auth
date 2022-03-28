@@ -1,21 +1,23 @@
 import React from "react";
-import { Link,} from "react-router-dom";
-import { apiAuth } from "../utils/Api.js";
+import { Link } from "react-router-dom";
 
 function Register(props) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
   function handleChangeEmail(event) {
     setEmail(event.target.value);
   }
+
   function handleChangePassword(event) {
     setPassword(event.target.value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    apiAuth.registerUser(password, email)
+    props.handleRegister(password, email);
   }
+
   return (
     <div className="auth">
       <h2 className="auth__title">Регистрация</h2>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 
 import "../index.css";
 import Header from "./Header.js";
@@ -26,8 +26,10 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
   const [isLogin, setIsLogin] = React.useState(false);
-  const [isInfoTooltipOpen,setIsInfoTooltipOpen]=React.useState(false)
-  const [isRegisterComplete,setIsRegisterComplete]=React.useState(false)
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+  const [isRegisterComplete, setIsRegisterComplete] = React.useState(false);
+  const [email, setEmail] = React.useState("");
+  const history = useHistory();
 
   React.useEffect(() => {
     api
@@ -62,7 +64,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
-    setIsInfoTooltipOpen(false)
+    setIsInfoTooltipOpen(false);
   }
 
   function handleUpdateUser({ name, about }) {
@@ -136,26 +138,72 @@ function App() {
       });
     closeAllPopups();
   }
-  React.useEffect(() => {
+
+  React.useEffect(() => tokenCheck(), []);
+
+  function tokenCheck() {
     apiAuth
       .checkJWT(localStorage.getItem("jwt"))
-      .then((data) => console.log(data));
-  }, []);
+      .then((data) => {
+        if (data) {
+          setIsLogin(true);
+          setEmail(data.data.email);
+          history.push("/main");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
+  function handleRegister(password, email) {
+    apiAuth
+      .registerUser(password, email)
+      .then((data) => {
+        console.log(data);
+        if (data) {
+          setIsRegisterComplete(true);
+        }
+      })
+      .catch((err) => {
+        setIsRegisterComplete(false);
+        console.log(err);
+      })
+      .finally(() => setIsInfoTooltipOpen(true));
+  }
+
+  function handleLogin(password, email) {
+    apiAuth
+      .loginUser(password, email)
+      .then((data) => {
+        if (data) {
+          localStorage.setItem("jwt", data.token);
+          tokenCheck();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleReLogin() {
+    localStorage.clear();
+    setIsLogin(false);
+  }
   return (
     <CurrentUserContext.Provider value={{ currentUser }}>
       <div className="page">
-        <Header />
+        <Header email={email} handleReLogin={handleReLogin} />
         <Switch>
           <Route path="/sign-up">
-            <Register />
+            <Register handleRegister={handleRegister} />
           </Route>
           <Route path="/sign-in">
-            <Login />
+            <Login handleLogin={handleLogin} />
           </Route>
           <ProtectedRoute
             exact
-            path="/"
+            path="/main"
             loggedIn={isLogin}
             component={Main}
             onEditProfile={handleEditProfileClick}
@@ -167,7 +215,7 @@ function App() {
             cards={cards}
           ></ProtectedRoute>
           <Route>
-            {isLogin ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+            {isLogin ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
           </Route>
         </Switch>
         <Footer />
@@ -205,6 +253,5 @@ function App() {
     </CurrentUserContext.Provider>
   );
 }
-
 
 export default App;
