@@ -19,34 +19,36 @@ function Card(props) {
   }
 
   return (
-    <div className="gallery__card">
-      <img
-        className="gallery__photo"
-        onClick={handleCardClick}
-        src={props.card.link}
-        alt={props.card.name}
-      />
-      <div className="gallery__caption">
-        <h2 className="gallery__photo-title">{props.card.name}</h2>
-        <div className="gallery__like-container">
-          <button
-            className={`btn-hover gallery__like ${
-              isLiked ? "gallery__like_active" : ""
-            }`}
-            onClick={handleLikeClick}
-            type="button"
-          ></button>
-          <span className="gallery__like-counter">
-            {props.card.likes.length}
-          </span>
+    <div className="template">
+      <div className="gallery__card">
+        <img
+          className="gallery__photo"
+          onClick={handleCardClick}
+          src={props.card.link}
+          alt={props.card.name}
+        />
+        <div className="gallery__caption">
+          <h2 className="gallery__photo-title">{props.card.name}</h2>
+          <div className="gallery__like-container">
+            <button
+              className={`btn-hover gallery__like ${
+                isLiked ? "gallery__like_active" : ""
+              }`}
+              onClick={handleLikeClick}
+              type="button"
+            ></button>
+            <span className="gallery__like-counter">
+              {props.card.likes.length}
+            </span>
+          </div>
         </div>
+        <button
+          className={`btn-hover gallery__delete-btn ${
+            !isOwn && "gallery__delete-btn_hidden"
+          }`}
+          onClick={handleDeleteClick}
+        ></button>
       </div>
-      <button
-        className={`btn-hover gallery__delete-btn ${
-          !isOwn && "gallery__delete-btn_hidden"
-        }`}
-        onClick={handleDeleteClick}
-      ></button>
     </div>
   );
 }

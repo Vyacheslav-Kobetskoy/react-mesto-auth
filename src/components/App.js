@@ -1,12 +1,12 @@
 import React from "react";
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 
-import "../index.css";
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
 import ImagePopup from "./ImagePopup.js";
-import { api, apiAuth } from "../utils/Api.js";
+import api from "../utils/Api.js";
+import apiAuth from "../utils/ApiAuth.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -23,6 +23,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
+  const [cards, setCards] = React.useState([]);
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
   const [isLogin, setIsLogin] = React.useState(false);
@@ -32,15 +33,25 @@ function App() {
   const history = useHistory();
 
   React.useEffect(() => {
-    api
-      .getProfile()
-      .then((profileInfo) => {
-        setCurrentUser(profileInfo);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (isLogin) {
+      api
+        .getProfile()
+        .then((profileInfo) => {
+          setCurrentUser(profileInfo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      api
+        .getInitialCards()
+        .then((initialCards) => {
+          setCards(initialCards);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isLogin]);
 
   function handleCardClick({ link, name }) {
     setSelectedCard({ link, name });
@@ -70,24 +81,26 @@ function App() {
   function handleUpdateUser({ name, about }) {
     api
       .patchEditProfile(name, about)
-      .then((profileInfo) => setCurrentUser(profileInfo))
+      .then((profileInfo) => {
+        setCurrentUser(profileInfo);
+        closeAllPopups();
+      })
       .catch((err) => {
         console.log(err);
       });
-    closeAllPopups();
   }
 
   function handleUpdateAvatar({ avatar }) {
     api
       .patchAvatar(avatar)
-      .then((profileInfo) => setCurrentUser(profileInfo))
+      .then((profileInfo) => {
+        setCurrentUser(profileInfo);
+        closeAllPopups();
+      })
       .catch((err) => {
         console.log(err);
       });
-    closeAllPopups();
   }
-
-  const [cards, setCards] = React.useState([]);
 
   function handleCardDelete(card) {
     api
@@ -118,42 +131,35 @@ function App() {
       });
   }
 
-  React.useEffect(() => {
+  function handleAddPlaceSubmit({ newCardTitle, newCardLink }) {
     api
-      .getInitialCards()
-      .then((initialCards) => {
-        setCards(initialCards);
+      .postAddCard(newCardTitle, newCardLink)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-
-  function handleAddPlaceSubmit({ newCardTitle, newCardLink }) {
-    api
-      .postAddCard(newCardTitle, newCardLink)
-      .then((newCard) => setCards([newCard, ...cards]))
-      .catch((err) => {
-        console.log(err);
-      });
-    closeAllPopups();
   }
 
   React.useEffect(() => tokenCheck(), []);
 
   function tokenCheck() {
-    apiAuth
-      .checkJWT(localStorage.getItem("jwt"))
-      .then((data) => {
-        if (data) {
-          setIsLogin(true);
-          setEmail(data.data.email);
-          history.push("/main");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (localStorage.getItem("jwt")) {
+      apiAuth
+        .checkJWT(localStorage.getItem("jwt"))
+        .then((data) => {
+          if (data) {
+            setIsLogin(true);
+            setEmail(data.data.email);
+            history.push("/main");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   function handleRegister(password, email) {
@@ -162,6 +168,7 @@ function App() {
       .then((data) => {
         console.log(data);
         if (data) {
+          history.push("/sign-in");
           setIsRegisterComplete(true);
         }
       })
@@ -195,12 +202,6 @@ function App() {
       <div className="page">
         <Header email={email} handleReLogin={handleReLogin} />
         <Switch>
-          <Route path="/sign-up">
-            <Register handleRegister={handleRegister} />
-          </Route>
-          <Route path="/sign-in">
-            <Login handleLogin={handleLogin} />
-          </Route>
           <ProtectedRoute
             exact
             path="/main"
@@ -214,9 +215,13 @@ function App() {
             onCardDelete={handleCardDelete}
             cards={cards}
           ></ProtectedRoute>
-          <Route>
-            {isLogin ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
+          <Route path="/sign-up">
+            <Register handleRegister={handleRegister} />
           </Route>
+          <Route path="/sign-in">
+            <Login handleLogin={handleLogin} />
+          </Route>
+          <Route>{!isLogin && <Redirect to="/sign-in" />}</Route>
         </Switch>
         <Footer />
       </div>

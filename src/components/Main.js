@@ -41,14 +41,13 @@ function Main(props) {
       <section className="gallery" aria-label="Галерея">
         {props.cards.map((card) => {
           return (
-            <div className="template" key={card._id}>
-              <Card
-                card={card}
-                onImage={props.onImage}
-                onCardLike={props.onCardLike}
-                onCardDelete={props.onCardDelete}
-              />
-            </div>
+            <Card
+              card={card}
+              onImage={props.onImage}
+              onCardLike={props.onCardLike}
+              onCardDelete={props.onCardDelete}
+              key={card._id}
+            />
           );
         })}
       </section>

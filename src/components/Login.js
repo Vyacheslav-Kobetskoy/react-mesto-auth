@@ -19,7 +19,7 @@ function Login(props) {
   return (
     <div className="auth">
       <h2 className="auth__title">Вход</h2>
-      <form className="auth__form" onSubmit={handleSubmit} noValidate>
+      <form className="auth__form" onSubmit={handleSubmit}>
         <input
           className="auth__input-text"
           type="email"
