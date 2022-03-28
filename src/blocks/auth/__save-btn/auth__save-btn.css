@@ -15,3 +15,11 @@
 .auth__save-btn:hover {
   opacity: 0.85;
 }
+
+@media (max-width: 767px) {
+  .auth__save-btn {
+    margin-top: 173px;
+    font-size: 16px;
+    line-height: 19px;
+  }
+}

@@ -5,5 +5,13 @@
   line-height: 22px;
   text-align: right;
   color: #ffffff;
-  text-decoration: none
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .header__auth {
+    padding-right: 30px;
+    display: flex;
+    flex-direction: column;
+  }
 }

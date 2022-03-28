@@ -7,3 +7,9 @@
   text-align: center;
   color: #ffffff;
 }
+
+@media (max-width: 767px) {
+  .auth__login-link {
+    padding-top: 20px;
+  }
+}

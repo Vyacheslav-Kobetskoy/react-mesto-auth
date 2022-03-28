@@ -2,3 +2,9 @@
   font-weight: 500;
   padding-right: 24px;
 }
+
+@media (max-width: 767px) {
+  .header__email {
+    padding: 0;
+  }
+}

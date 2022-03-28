@@ -17,7 +17,7 @@ function Header(props) {
           </Link>
         </Route>
         <Route path="/main">
-          <div className="header__auth">
+          <div className="header__auth header__auth-main">
           <span className="header__email">{props.email}</span>
             <Link
               className="header__relogin"

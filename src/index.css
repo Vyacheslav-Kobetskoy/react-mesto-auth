@@ -10,6 +10,7 @@
 @import url(./blocks/header/__auth/header__auth.css);
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__relogin/header__relogin.css);
+@import url(./blocks/header/header__auth-main/header__auth-main.css);
 
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__docket/profile__docket.css);
