@@ -14,6 +14,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
+import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -24,7 +25,9 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
-  const [isLogin, setIsLogin] = React.useState();
+  const [isLogin, setIsLogin] = React.useState(false);
+  const [isInfoTooltipOpen,setIsInfoTooltipOpen]=React.useState(false)
+  const [isRegisterComplete,setIsRegisterComplete]=React.useState(false)
 
   React.useEffect(() => {
     api
@@ -59,6 +62,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsInfoTooltipOpen(false)
   }
 
   function handleUpdateUser({ name, about }) {
@@ -193,8 +197,14 @@ function App() {
         link={selectedCard.link}
         name={selectedCard.name}
       />
+      <InfoTooltip
+        isOpen={isInfoTooltipOpen}
+        onClose={closeAllPopups}
+        isRegisterComplete={isRegisterComplete}
+      ></InfoTooltip>
     </CurrentUserContext.Provider>
   );
 }
+
 
 export default App;

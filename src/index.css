@@ -62,3 +62,8 @@
 @import url(./blocks/auth/__save-btn/auth__save-btn.css);
 @import url(./blocks/auth/__title/auth__title.css);
 @import url(./blocks/auth/__login-link/auth__login-link.css);
+
+@import url(./blocks/registerInfo/registerInfo.css);
+@import url(./blocks/registerInfo/__img/registerInfo__img.css);
+@import url(./blocks/registerInfo/__title/registerInfo__title.css);
+@import url(./blocks/registerInfo/__container/registerInfo__container.css);
